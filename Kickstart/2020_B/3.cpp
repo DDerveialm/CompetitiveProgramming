@@ -10,32 +10,29 @@ int main() {
 	int T;
 	cin >> T;
 	for (int t = 1; t <= T; ++t) {
-		long long N = 0, S = 0, E = 0, W = 0, k = 1;
+		long long N = 0, S = 0, E = 0, W = 0;
 		stack<long long> my_stack;
 		my_stack.push(1);
 		string s;
 		cin >> s;
 		for (const auto & c : s) {
 			if (c >= '2' && c <= '9') {
-				k *= (c - '0');
-				k %= num;
-				my_stack.push(k);
+				my_stack.push((my_stack.top() * (c - '0')) % num);
 			} else if (c == ')') {
 				my_stack.pop();
-				k = my_stack.top();
 			} else {
 				switch(c) {
 					case 'N':
-						N += k;
+						N += my_stack.top();
 						break;
 					case 'S':
-						S += k;
+						S += my_stack.top();
 						break;
 					case 'E':
-						E += k;
+						E += my_stack.top();
 						break;
 					case 'W':
-						W += k;
+						W += my_stack.top();
 						break;
 				}
 			}
@@ -46,6 +43,5 @@ int main() {
 		while(y <= 0) y += num;
 		cout << "Case #" << t << ": " << x << " " << y << endl;
 	}
-
 	return 0;
 }
