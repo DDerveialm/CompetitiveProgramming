@@ -12,7 +12,7 @@ constexpr int MOD = 1e9 + 7;
 
 class DFS {
 public:
-	DFS(vector<vector<int>>&);
+	DFS(vector<vector<int>>&&);
 	int dfs(int, int);
 	vector<long long>&& get_w();
 private:
@@ -21,7 +21,7 @@ private:
 	int n;
 };
 
-DFS::DFS(vector<vector<int>>& a) {
+DFS::DFS(vector<vector<int>>&& a) {
 	adjLists = move(a);
 	n = adjLists.size();
 }
@@ -56,7 +56,7 @@ int main() {
 			adjLists[u].push_back(v);
 			adjLists[v].push_back(u);
 		}
-		DFS D (adjLists);
+		DFS D (move(adjLists));
 		D.dfs(0);
 		auto w = D.get_w();
 		sort(w.begin(), w.end());
