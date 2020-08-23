@@ -10,33 +10,17 @@ using namespace std;
 
 constexpr int MOD = 1e9 + 7;
 
-class DFS {
-public:
-	DFS(vector<vector<int>>&&);
-	int dfs(int, int);
-	vector<long long>&& get_w();
-private:
+namespace DFS {
 	vector<vector<int>> adjLists;
 	vector<long long> weight;
-	int n;
-};
-
-DFS::DFS(vector<vector<int>>&& a) {
-	adjLists = move(a);
-	n = adjLists.size();
-}
-
-int DFS::dfs(int u, int w = -1) {
-	int count = 1;
-	for (const auto& v : adjLists[u])
+	int dfs(int u, int w = -1) {
+		int count = 1;
+		for (const auto& v : adjLists[u])
 		if (v != w) count += dfs(v, u);
-	if (w != -1) weight.push_back(static_cast<long long>(count) * static_cast<long long>((n - count)));
-	return count;
-}
-
-vector<long long>&& DFS::get_w() {
-	return move(weight);
-}
+		if (w != -1) weight.push_back(static_cast<long long>(count) * static_cast<long long>(adjLists.size() - count));
+		return count;
+	}
+};
 
 int main() {
 	ios_base::sync_with_stdio(0);
@@ -48,19 +32,17 @@ int main() {
 	while (t--) {
 		int n;
 		cin >> n;
-		vector<vector<int>> adjLists(n);
+		DFS::adjLists.assign(n, {});
+		DFS::weight.clear();
 		for (int i = 0; i < n - 1; ++i) {
 			int u, v;
 			cin >> u >> v;
 			--u, --v;
-			adjLists[u].push_back(v);
-			adjLists[v].push_back(u);
+			DFS::adjLists[u].push_back(v);
+			DFS::adjLists[v].push_back(u);
 		}
-		DFS D (move(adjLists));
-		D.dfs(0);
-		auto w = D.get_w();
-		sort(w.begin(), w.end());
-
+		DFS::dfs(0);
+		sort(DFS::weight.begin(), DFS::weight.end());
 
 		int m;
 		cin >> m;
@@ -77,7 +59,7 @@ int main() {
 		
 		long long ans = 0;
 		for (int i = 0; i < n - 1; ++i) {
-			ans += w[i] * p[i];
+			ans += DFS::weight[i] * p[i];
 			ans %= MOD;
 		}
 		cout << ans << endl;

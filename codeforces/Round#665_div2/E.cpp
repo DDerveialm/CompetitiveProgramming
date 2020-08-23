@@ -12,16 +12,6 @@ using namespace std;
 
 constexpr int SL = 1e6; // side length
 
-inline int cal(int x) { // 2 ^ ceil(log2(x))
-	x |= x >> 1;
-	x |= x >> 2;
-	x |= x >> 4;
-	x |= x >> 8;
-	x |= x >> 16;
-	x += 1;
-	return x;
-}
-
 class segmentTree {
 public:
 	segmentTree(int);
@@ -29,7 +19,7 @@ public:
 	void add(int, int);
 private:
 	inline int left(int);
-	inline int right(int);
+	inline int right(int, int, int);
 	int aux_sum(int, int, int, int, int);
 	void aux_add(int, int, int, int, int);
 	int n; // [0 : n - 1]
@@ -37,11 +27,11 @@ private:
 };
 
 segmentTree::segmentTree(int _n) : n(_n) {
-	t.assign(2 * cal(n), 0);
+	t.assign(2 * n - 1, 0);
 }
 
-inline int segmentTree::left(int v) { return 2 * v + 1; }
-inline int segmentTree::right(int v) { return 2 * v + 2; }
+inline int segmentTree::left(int v) { return v + 1; }
+inline int segmentTree::right(int v, int l, int m) { return v + 2 * (m - l + 1); }
 
 int segmentTree::sum(int l, int r) {
 	return aux_sum(l, r, 0, 0, n - 1);
@@ -51,7 +41,7 @@ int segmentTree::aux_sum(int l, int r, int v, int tl, int tr) {
 	int tm = (tl + tr) / 2;
 	if (l > r) return 0;
 	else if (l == tl && r == tr) return t[v];
-	else return aux_sum(l, min(tm, r), left(v), tl, tm) + aux_sum(max(l, tm + 1), r, right(v), tm + 1, tr);
+	else return aux_sum(l, min(tm, r), left(v), tl, tm) + aux_sum(max(l, tm + 1), r, right(v, tl, tm), tm + 1, tr);
 }
 
 void segmentTree::add(int p, int inc) {
@@ -63,8 +53,8 @@ void segmentTree::aux_add(int p, int inc, int v, int l, int r) {
 	else {
 		int m = (l + r) / 2;
 		if (p <= m) aux_add(p, inc, left(v), l, m);
-		else aux_add(p, inc, right(v), m + 1, r);
-		t[v] = t[left(v)] + t[right(v)];
+		else aux_add(p, inc, right(v, l, m), m + 1, r);
+		t[v] = t[left(v)] + t[right(v, l, m)];
 	}
 }
 
