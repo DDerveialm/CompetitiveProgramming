@@ -25,8 +25,8 @@ int main() {
 	double l{0}, r{*max_element(vec.begin(), vec.end()) + err}; // ans is in [l, r)
 	while (l <= r - 2 * err) {
 		double m{(l + r) / 2};
-		if (!check(vec, k, m - err)) r = m;
-		else l = m;
+		if (check(vec, k, m)) l = m;
+		else r = m;
 	}
 	cout << fixed << setprecision(7) << (l + r) / 2 << endl;
 	return 0;

@@ -1,5 +1,4 @@
 #include <iostream>
-#include <cmath>
 
 using namespace std;
 
@@ -13,11 +12,11 @@ int main() {
 	cin.tie(nullptr);
 
 	int n, x, y;
-	cin >> n >> x >> y;
+	cin >> n >> x >> y, --n;
 	int l{n / 2}, r{max(x, y) * n + 1};
 	while (l < r - 1) {
 		int m{(l + r) / 2};
-		if (check(n - 1, x, y, m - 1)) r = m;
+		if (check(n, x, y, m - 1)) r = m;
 		else l = m;
 	}
 	cout << l + min(x, y) << endl;
