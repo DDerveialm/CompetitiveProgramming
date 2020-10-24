@@ -11,8 +11,7 @@ void solve() {
 	for (int i{1}; i <= w; ++i) cin >> v[i];
 	sort(v.begin() + 1, v.end());
 
-	vector<long long> presum(w + 1);
-	presum[0] = 0;
+	vector<long long> presum(w + 2);
 	for (int i{1}; i <= w; ++i) presum[i] = presum[i - 1] + v[i];
 
 	long long ans{w * n};
