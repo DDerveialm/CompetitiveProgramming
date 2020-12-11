@@ -7,18 +7,18 @@ vector<vector<int>> adj;
 int n, a, b, da, db;
 int h, dist, diam;
 
-int dfs(int u, int w) {
-	int len{0};
+int dfs(int u, int w = -1) {
+	int mx{0};
 	if (u == b) dist = h;
 	for (auto& v : adj[u])
 		if (v != w) {
 			++h;
-			auto cur = 1 + dfs(v, u);
+			auto len{1 + dfs(v, u)};
 			--h;
-			diam = max(diam, cur + len);
-			len = max(len, cur);
+			diam = max(diam, mx + len);
+			mx = max(mx, len);
 		}
-	return len;
+	return mx;
 }
 
 void solve() {
@@ -32,7 +32,7 @@ void solve() {
 		adj[v].push_back(u);
 	}
 	h = diam = 0;
-	dfs(a, -1);
+	dfs(a);
 	if (2 * da >= min(diam, db) || dist <= da) cout << "Alice" << endl;
 	else cout << "Bob" << endl;
 }
