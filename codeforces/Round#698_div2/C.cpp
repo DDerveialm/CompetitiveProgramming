@@ -12,29 +12,20 @@ void solve() {
 
 	sort(d.rbegin(), d.rend());
 	for (int i{0}; i < 2 * n; i += 2)
-		if (d[i] != d[i + 1]) {
+		if (d[i] != d[i + 1] || (i + 2 < 2 * n && d[i] == d[i + 2])) {
 			cout << "NO\n";
 			return ;
 		}
 
-	long long c{0}, _x{-1};
+	long long c{0};
 	for (int i{0}; i < 2 * n; i += 2) {
-		if (d[i] <= c) {
+		int k{2 * n - i};
+		if (d[i] <= c || (d[i] - c) % k) {
 			cout << "NO\n";
 			return ;
 		}
-
-		d[i] -= c;
-
-		int _n{2 * n - i};
-		long long x{d[i] / _n};
-		if (d[i] % _n || x == _x) {
-			cout << "NO\n";
-			return ;
-		}
-
-		c += 2 * x;
-		_x = x;
+		d[i] = (d[i] - c) / k;
+		c += 2 * d[i];
 	}
 
 	cout << "YES\n";

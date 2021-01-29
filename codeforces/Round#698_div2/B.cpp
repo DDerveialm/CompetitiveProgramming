@@ -1,5 +1,5 @@
 #include <iostream>
-#include <array>
+#include <vector>
 
 using namespace std;
 
@@ -7,19 +7,20 @@ void solve() {
 	int q, d;
 	cin >> q >> d;
 
-	array<int, 10> a{};
-	fill(a.begin(), a.end(), d * 10);
+	vector<int> v{};
+	for (int i{0}; i < d; ++i) v.push_back(10 * i + d);
 
-	for (int i{1}; i <= 9; ++i) {
-		int x{d * i};
-		a[x % 10] = min(a[x % 10], x);
-	}
+	vector<bool> dp(10 * d, false);
+	dp[0] = true;
+	for (int i{1}; i < dp.size(); ++i)
+		for (auto& n : v)
+			if (i - n >= 0 && dp[i - n]) dp[i] = true;
 
 	while (q--) {
 		long long x;
 		cin >> x;
 
-		if (x >= a[x % 10]) cout << "YES\n";
+		if (x >= 10 * d || dp[x]) cout << "YES\n";
 		else cout << "NO\n";
 	}
 }
